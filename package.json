@@ -21,5 +21,15 @@
   "bugs": {
     "url": "https://github.com/aug2uag/healdao/issues"
   },
-  "homepage": "https://github.com/aug2uag/healdao#readme"
+  "homepage": "https://github.com/aug2uag/healdao#readme",
+  "devDependencies": {
+    "hardhat": "^2.17.3"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@oasisprotocol/sapphire-hardhat": "^2.16.1",
+    "chai": "^4.3.8",
+    "dotenv": "^16.3.1",
+    "hardhat-abi-exporter": "^2.10.1"
+  }
 }
