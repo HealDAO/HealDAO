@@ -1,0 +1,25 @@
+{
+  "name": "healdao",
+  "version": "0.0.1",
+  "description": "Using blockchain for health records and wellness to ensure data trust and integrity.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx hardhat test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aug2uag/healdao.git"
+  },
+  "keywords": [
+    "dao",
+    "health",
+    "wellness",
+    "emr"
+  ],
+  "author": "Reza Fatahi <aug2uag@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aug2uag/healdao/issues"
+  },
+  "homepage": "https://github.com/aug2uag/healdao#readme"
+}
