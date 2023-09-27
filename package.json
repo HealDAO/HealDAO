@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aug2uag/healdao.git"
+    "url": "git+https://github.com/HealDAO/healdao.git"
   },
   "keywords": [
     "dao",
@@ -19,9 +19,9 @@
   "author": "Reza Fatahi <aug2uag@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aug2uag/healdao/issues"
+    "url": "https://github.com/HealDAO/healdao/issues"
   },
-  "homepage": "https://github.com/aug2uag/healdao#readme",
+  "homepage": "https://github.com/HealDAO/healdao#readme",
   "devDependencies": {
     "hardhat": "^2.17.3"
   },
