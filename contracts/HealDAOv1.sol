@@ -3,8 +3,7 @@ pragma solidity ^0.8.0;
 
 contract HealthRecordsDAO {
 
-    // Subcomponents: Date, Diagnosis, Location, Unit
-
+    // Subcomponents
     struct Date {
         uint16 day;
         uint16 month;
@@ -123,15 +122,7 @@ contract HealthRecordsDAO {
         emit VitalAdded(address(this), vitalAbbreviation, timestamp);
     }
 
-    function getMedications() public view returns (string memory) {
-        string memory result = "";
-        for(uint16 i = 0; i < medications.length; i++) {
-            Medication memory med = medications[i];
-            result = string(abi.encodePacked(result, med.drugAbbreviation, "-", uint2str(med.dose), "-", uint2str(med.frequency), "-", uint2str(med.duration), "-", date2str(med.lastDate), "; "));
-        }
-        return result;
-    }
-
+    // Individual getters
     function getAllergies() public view returns (string memory) {
         string memory result = "";
         for(uint16 i = 0; i < allergies.length; i++) {
@@ -168,6 +159,15 @@ contract HealthRecordsDAO {
         return result;
     }
 
+    function getMedications() public view returns (string memory) {
+        string memory result = "";
+        for(uint16 i = 0; i < medications.length; i++) {
+            Medication memory med = medications[i];
+            result = string(abi.encodePacked(result, med.drugAbbreviation, "-", uint2str(med.dose), "-", uint2str(med.frequency), "-", uint2str(med.duration), "-", date2str(med.lastDate), "; "));
+        }
+        return result;
+    }
+
     function getProcedures() public view returns (string memory) {
         string memory result = "";
         for(uint16 i = 0; i < procedures.length; i++) {
@@ -193,7 +193,7 @@ contract HealthRecordsDAO {
         for(uint i = 0; i < newAllergies.length; i++) {
             allergies.push(newAllergies[i]);
         }
-        emit UpdatedAllergies(msg.sender);
+        emit UpdatedAllergies(address(this));
     }
 
     function updateBloodworks(Bloodwork[] memory newBloodworks) public {
@@ -202,7 +202,7 @@ contract HealthRecordsDAO {
         for(uint i = 0; i < newBloodworks.length; i++) {
             bloodworks.push(newBloodworks[i]);
         }
-        emit UpdatedBloodworks(msg.sender);
+        emit UpdatedBloodworks(address(this));
     }
 
     function updateDiagnoses(Diagnosis[] memory newDiagnoses) public {
@@ -212,7 +212,7 @@ contract HealthRecordsDAO {
             diagnoses.push(newDiagnoses[i]);
         }
 
-        emit UpdatedDiagnoses(msg.sender);
+        emit UpdatedDiagnoses(address(this));
     }
 
     function updateGlobals(Global[] memory newGlobals) public {
@@ -221,7 +221,7 @@ contract HealthRecordsDAO {
         for(uint i = 0; i < newGlobals.length; i++) {
             globals.push(newGlobals[i]);
         }
-        emit UpdatedGlobals(msg.sender);
+        emit UpdatedGlobals(address(this));
     }
 
     function updateMedications(Medication[] memory newMedications) public {
@@ -230,7 +230,7 @@ contract HealthRecordsDAO {
         for(uint i = 0; i < newMedications.length; i++) {
             medications.push(newMedications[i]);
         }
-        emit UpdatedMedications(msg.sender);
+        emit UpdatedMedications(address(this));
     }
 
     function updateProcedures(Procedure[] memory newProcedures) public {
@@ -239,7 +239,7 @@ contract HealthRecordsDAO {
         for(uint i = 0; i < newProcedures.length; i++) {
             procedures.push(newProcedures[i]);
         }
-        emit UpdatedProcedures(msg.sender);
+        emit UpdatedProcedures(address(this));
     }
 
     function updateVitals(Vital[] memory newVitals) public {
@@ -248,10 +248,14 @@ contract HealthRecordsDAO {
         for(uint i = 0; i < newVitals.length; i++) {
             vitals.push(newVitals[i]);
         }
-        emit UpdatedVitals(msg.sender);
+        emit UpdatedVitals(address(this));
     }
 
     // Helper functions to convert uint to string and Date to string format
+    function date2str(Date memory _date) internal pure returns (string memory) {
+        return string(abi.encodePacked(uint2str(_date.day), "/", uint2str(_date.month), "/", uint2str(_date.year)));
+    }
+
     function uint2str(uint16 _i) internal pure returns (string memory) {
         if (_i == 0) {
             return "0";
@@ -277,16 +281,11 @@ contract HealthRecordsDAO {
         return string(bstr);
     }
 
-    function date2str(Date memory _date) internal pure returns (string memory) {
-        return string(abi.encodePacked(uint2str(_date.day), "/", uint2str(_date.month), "/", uint2str(_date.year)));
-    }
-
     function timestampToDate(uint256 timestamp) internal pure returns (Date memory) {
         uint16 year = uint16((timestamp / 31536000) + 1970);
         uint16 month = uint16((timestamp % 31536000) / 2628000 + 1);
         uint16 day = uint16(((timestamp % 31536000) % 2628000) / 86400 + 1);
         return Date(day, month, year);
     }
-
 
 }
