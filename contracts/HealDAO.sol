@@ -26,6 +26,7 @@ contract HealDAO {
 
     constructor() {
         owner = msg.sender;
+        accessor[owner] = true;
     }
 
     modifier onlyOwner() {
@@ -34,7 +35,7 @@ contract HealDAO {
     }
 
     modifier isAllowed() {
-        require(accessor[msg.sender] || msg.sender == owner, "Not authorized");
+        require(msg.sender == owner || accessor[msg.sender], "Not authorized");
         _;
     }
 
@@ -242,7 +243,7 @@ contract HealDAO {
     }
 
     // Individual getters
-    function getAllergies() public view isAllowed returns (string memory) {
+    function getAllergies() public view returns (string memory) {
         string memory result = "";
         for(uint16 i = 0; i < allergies.length; i++) {
             result = string(abi.encodePacked(result, allergies[i].allergyAbbreviation, "; "));
@@ -250,7 +251,7 @@ contract HealDAO {
         return result;
     }
 
-    function getBloodworks() public view isAllowed returns (string memory) {
+    function getBloodworks() public view returns (string memory) {
         string memory result = "";
         for(uint16 i = 0; i < bloodworks.length; i++) {
             Bloodwork memory bw = bloodworks[i];
@@ -259,7 +260,7 @@ contract HealDAO {
         return result;
     }
 
-    function getDiagnoses() public view isAllowed returns (string memory) {
+    function getDiagnoses() public view returns (string memory) {
         string memory result = "";
         for(uint16 i = 0; i < diagnoses.length; i++) {
             Diagnosis memory diag = diagnoses[i];
@@ -269,7 +270,7 @@ contract HealDAO {
         return result;
     }
 
-    function getGlobals() public view isAllowed returns (string memory) {
+    function getGlobals() public view returns (string memory) {
         string memory result = "";
         for(uint16 i = 0; i < globals.length; i++) {
             Global memory glob = globals[i];
@@ -278,7 +279,7 @@ contract HealDAO {
         return result;
     }
 
-    function getMedications() public view isAllowed returns (string memory) {
+    function getMedications() public view returns (string memory) {
         string memory result = "";
         for(uint16 i = 0; i < medications.length; i++) {
             Medication memory med = medications[i];
@@ -287,7 +288,7 @@ contract HealDAO {
         return result;
     }
 
-    function getProcedures() public view isAllowed returns (string memory) {
+    function getProcedures() public view returns (string memory) {
         string memory result = "";
         for(uint16 i = 0; i < procedures.length; i++) {
             Procedure memory proc = procedures[i];
@@ -297,7 +298,7 @@ contract HealDAO {
         return result;
     }
 
-    function getVitals() public view isAllowed returns (string memory) {
+    function getVitals() public view returns (string memory) {
         string memory result = "";
         for(uint16 i = 0; i < vitals.length; i++) {
             Vital memory vit = vitals[i];
