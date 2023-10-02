@@ -138,13 +138,6 @@ contract HealDAO {
     event MedicationAdded(address indexed records, string indexed drugAbbreviation);
     event ProcedureAdded(address indexed records, string procedureType);
     event VitalAdded(address indexed records, string vitalType, Date timestamp);
-    event UpdatedAllergies(address indexed records);
-    event UpdatedBloodworks(address indexed records);
-    event UpdatedDiagnoses(address indexed records);
-    event UpdatedGlobals(address indexed records);
-    event UpdatedMedications(address indexed records);
-    event UpdatedProcedures(address indexed records);
-    event UpdatedVitals(address indexed records);
 
     function addAllergy(string memory allergyAbbreviation) public isAllowed {
         allergies.push(Allergy(allergyAbbreviation));
