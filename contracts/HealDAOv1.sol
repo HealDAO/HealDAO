@@ -18,7 +18,7 @@ contract HealthRecordsDAO {
     struct Bloodwork {
         string bloodworkAbbreviation;
         uint16 measure;
-        uint16 multiplier;
+        uint8 multiplier;  // -100 to 100, ±1000 would be new unit
         string unitAbbreviation;
         Date timestamp;
     }
@@ -32,7 +32,7 @@ contract HealthRecordsDAO {
     struct Global {
         string globalAbbreviation;
         uint16 measure;
-        uint16 multiplier;
+        uint8 multiplier;
         string unitAbbreviation;
         Date timestamp;
     }
@@ -40,7 +40,8 @@ contract HealthRecordsDAO {
     struct Medication {
         string drugAbbreviation;
         uint16 dose;
-        uint16 multiplier;
+        uint8 multiplier;
+        string unitAbbreviation;
         uint16 frequency;
         uint16 duration;
         Date lastDate;
@@ -55,7 +56,7 @@ contract HealthRecordsDAO {
     struct Vital {
         string vitalAbbreviation;
         uint16 measure;
-        uint16 multiplier;
+        uint8 multiplier;
         string unitAbbreviation;
         Date timestamp;
     }
@@ -88,7 +89,7 @@ contract HealthRecordsDAO {
         emit AllergyAdded(address(this), allergyAbbreviation);
     }
 
-    function addBloodwork(string memory bloodworkAbbreviation, uint16 measure, uint16 multiplier, string memory unitAbbreviation, uint16 day, uint16 month, uint16 year) public {
+    function addBloodwork(string memory bloodworkAbbreviation, uint16 measure, uint8 multiplier, string memory unitAbbreviation, uint16 day, uint16 month, uint16 year) public {
         Date memory timestamp = Date(day, month, year);
         bloodworks.push(Bloodwork(bloodworkAbbreviation, measure, multiplier, unitAbbreviation, timestamp));
         emit BloodworkAdded(address(this), bloodworkAbbreviation, measure, unitAbbreviation, timestamp);
@@ -99,15 +100,15 @@ contract HealthRecordsDAO {
         emit DiagnosisAdded(address(this), diagnosisAbbreviation);
     }
 
-    function addGlobal(string memory globalAbbreviation, uint16 measure, uint16 multiplier, string memory unitAbbreviation, uint16 day, uint16 month, uint16 year) public {
+    function addGlobal(string memory globalAbbreviation, uint16 measure, uint8 multiplier, string memory unitAbbreviation, uint16 day, uint16 month, uint16 year) public {
         Date memory timestamp = Date(day, month, year);
         globals.push(Global(globalAbbreviation, measure, multiplier, unitAbbreviation, timestamp));
         emit GlobalInfoAdded(address(this), globalAbbreviation, timestamp);
     }
 
-    function addMedication(string memory drugAbbreviation, uint16 dose, uint16 multiplier, uint16 frequency, uint16 duration, uint16 lastDay, uint16 lastMonth, uint16 lastYear) public {
+    function addMedication(string memory drugAbbreviation, uint16 dose, uint8 multiplier, string memory unitAbbreviation, uint16 frequency, uint16 duration, uint16 lastDay, uint16 lastMonth, uint16 lastYear) public {
         Date memory lastDate = Date(lastDay, lastMonth, lastYear);
-        medications.push(Medication(drugAbbreviation, dose, multiplier, frequency, duration, lastDate));
+        medications.push(Medication(drugAbbreviation, dose, multiplier, unitAbbreviation, frequency, duration, lastDate));
         emit MedicationAdded(address(this), drugAbbreviation);
     }
 
@@ -116,7 +117,7 @@ contract HealthRecordsDAO {
         emit ProcedureAdded(address(this), procedureAbbreviation);
     }
 
-    function addVital(string memory vitalAbbreviation, uint16 measure, uint16 multiplier, string memory unitAbbreviation, uint16 day, uint16 month, uint16 year) public {
+    function addVital(string memory vitalAbbreviation, uint16 measure, uint8 multiplier, string memory unitAbbreviation, uint16 day, uint16 month, uint16 year) public {
         Date memory timestamp = Date(day, month, year);
         vitals.push(Vital(vitalAbbreviation, measure, multiplier, unitAbbreviation, timestamp));
         emit VitalAdded(address(this), vitalAbbreviation, timestamp);
@@ -135,7 +136,7 @@ contract HealthRecordsDAO {
         string memory result = "";
         for(uint16 i = 0; i < bloodworks.length; i++) {
             Bloodwork memory bw = bloodworks[i];
-            result = string(abi.encodePacked(result, bw.bloodworkAbbreviation, "-", uint2str(bw.measure), "-", bw.unitAbbreviation, "-", date2str(bw.timestamp), "; "));
+            result = string(abi.encodePacked(result, bw.bloodworkAbbreviation, "-", uint2str(bw.measure), "-", uint2str(bw.multiplier), "-", bw.unitAbbreviation, "-", date2str(bw.timestamp), "; "));
         }
         return result;
     }
@@ -154,7 +155,7 @@ contract HealthRecordsDAO {
         string memory result = "";
         for(uint16 i = 0; i < globals.length; i++) {
             Global memory glob = globals[i];
-            result = string(abi.encodePacked(result, glob.globalAbbreviation, "-", uint2str(glob.measure), "-", glob.unitAbbreviation, "-", date2str(glob.timestamp), "; "));
+            result = string(abi.encodePacked(result, glob.globalAbbreviation, "-", uint2str(glob.measure), "-", uint2str(glob.multiplier), "-", glob.unitAbbreviation, "-", date2str(glob.timestamp), "; "));
         }
         return result;
     }
@@ -163,7 +164,7 @@ contract HealthRecordsDAO {
         string memory result = "";
         for(uint16 i = 0; i < medications.length; i++) {
             Medication memory med = medications[i];
-            result = string(abi.encodePacked(result, med.drugAbbreviation, "-", uint2str(med.dose), "-", uint2str(med.frequency), "-", uint2str(med.duration), "-", date2str(med.lastDate), "; "));
+            result = string(abi.encodePacked(result, med.drugAbbreviation, "-", uint2str(med.dose), "-", uint2str(med.multiplier), "-", med.unitAbbreviation, "-", uint2str(med.frequency), "-", uint2str(med.duration), "-", date2str(med.lastDate), "; "));
         }
         return result;
     }
@@ -182,7 +183,7 @@ contract HealthRecordsDAO {
         string memory result = "";
         for(uint16 i = 0; i < vitals.length; i++) {
             Vital memory vit = vitals[i];
-            result = string(abi.encodePacked(result, vit.vitalAbbreviation, "-", uint2str(vit.measure), "-", vit.unitAbbreviation, "-", date2str(vit.timestamp), "; "));
+            result = string(abi.encodePacked(result, vit.vitalAbbreviation, "-", uint2str(vit.measure), "-", uint2str(vit.multiplier), "-", vit.unitAbbreviation, "-", date2str(vit.timestamp), "; "));
         }
         return result;
     }
